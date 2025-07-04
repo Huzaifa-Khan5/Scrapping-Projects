@@ -39,7 +39,7 @@ def scrape_products(wait):
                     except:
                         pass
                     
-                    time.sleep(2)
+                    time.sleep(1)
                     color_name=driver.find_element(by=By.CSS_SELECTOR,value='''li.sku-attr-container.attr-v-show-li.is-color.is-sku-img.attr-model
                     div.attr-v-show.attr-v-model.form-item h5 div.attr-value''').text
                     
@@ -52,7 +52,7 @@ def scrape_products(wait):
                             "Image URLs": ",".join(image_urls),
                             **details
                         }
-                data.append(row)
+                    data.append(row)
                 driver.back()
                 print(i) 
             try:
