@@ -9,36 +9,45 @@ from selenium.webdriver.common.keys import Keys
 
 
 def scrape_products():
-    products=driver.find_elements(by=By.CSS_SELECTOR,value='div.hm_hn div div div a')
+    
+    products=driver.find_elements(by=By.CSS_SELECTOR,value='div.hl_hm div div div a')
+    if len(products)==0:
+        products=driver.find_elements(by=By.CSS_SELECTOR,value='div.hs_ht div div div a')
+        if len(products)==0:
+            products=driver.find_elements(by=By.CSS_SELECTOR,value='div.hj_hk div div div a')
+            
     print(len(products))
     products_links=[product.get_attribute("href") for product in products if product.get_attribute("href").startswith("https://www.aliexpress.com/item")]
-    print(len(products_links))
+    print("Len Of Products on this page: ",len(products_links))
     data=[]
     for prod_link in products_links:
         driver.get(prod_link)
         
         name=driver.find_element(by=By.CSS_SELECTOR,value='div.title--wrap--UUHae_g [data-pl="product-title"]').text
 
-        price=driver.find_element(by=By.CSS_SELECTOR,value='[data-pl="product-price"] div span').text
+        try:
+            price=driver.find_element(by=By.CSS_SELECTOR,value='div.price-default--bannerContent--RVEikiQ div div span').text
+        except:
+            price=driver.find_element(by=By.CSS_SELECTOR,value='div.price-default--wrap--uwQneeq div span').text
 
         imgs=driver.find_elements(by=By.CSS_SELECTOR,value='div div.slider--item--RpyeewA div img')
         img_links=[img_link.get_attribute('src') for i,img_link in enumerate(imgs) if i<5 and img_link.get_attribute('src') is not None]
         
-    #     try:
-    #         driver.find_element(by=By.XPATH,value='//*[@id="nav-specification"]/button').click()
-    #     except:
-    #         pass
-    #     details={}
-    #     keys=driver.find_elements(by=By.CSS_SELECTOR,value='ul.specification--list--GZuXzRX li div div.specification--title--SfH3sA8')
-    #     values=driver.find_elements(by=By.CSS_SELECTOR,value='ul.specification--list--GZuXzRX li div div.specification--desc--Dxx6W0W')
+        try:
+            driver.find_element(by=By.XPATH,value='//*[@id="nav-specification"]/button').click()
+        except:
+            pass
+        details={}
+        keys=driver.find_elements(by=By.CSS_SELECTOR,value='ul.specification--list--GZuXzRX li div div.specification--title--SfH3sA8')
+        values=driver.find_elements(by=By.CSS_SELECTOR,value='ul.specification--list--GZuXzRX li div div.specification--desc--Dxx6W0W')
 
-    #     for key,value in zip(keys,values):
-    #         details[key.text]=value.text
+        for key,value in zip(keys,values):
+            details[key.text]=value.text
     data.append({"Name":name,"Price":price,"Images":','.join(img_links)})
     
 def go_to_page(input_url):
     product_data=[]
-    for page_no in range(1,9):
+    for page_no in range(1,5):
         if page_no==1:
             get_url(input_url)
             scroll_page()
@@ -76,6 +85,7 @@ def select_usd_prices():
     wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[6]/div/div[1]'))).click()
     wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[6]/div/div[2]/div[3]'))).click()
     wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[7]'))).click()
+
 def scroll_page():
     scroll_pause_time=2
     scroll_step=300
@@ -106,11 +116,12 @@ def main():
     input_url=input("Enter URL: ")
     get_url(input_url)
     select_usd_prices()
+    get_url(input_url)
     time.sleep(5)
     go_to_page(input_url)
     # df = pd.DataFrame(data)
     # df.to_csv(f"{name}.csv", index=False)
-    driver.quit()
+    # driver.quit()
 
 
 if __name__ == "__main__":
