@@ -1,2 +1,0 @@
-women clothing,mens clothing,shoes bags,weddinganevents,beauty
-name,price, 4pic, shades, highlights
