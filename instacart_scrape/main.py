@@ -22,9 +22,9 @@ def save_product(product_data, filename):
 # ----------------------------
 # Save failed links
 # ----------------------------
-def save_failed_link(link):
+def save_failed_link(link,filename):
 
-    with open("failed_links.txt", "a") as f:
+    with open(f"{filename}_failed_links.txt", "a") as f:
         f.write(link + "\n")
 
 
@@ -102,7 +102,7 @@ def scrape_products(driver, wait, products_links, filename):
 
             print(f"Error scraping: {product_link}")
 
-            save_failed_link(product_link)
+            save_failed_link(product_link,filename)
 
         finally:
 
@@ -118,7 +118,7 @@ def get_all_pages(driver, wait, input_url, filename):
 
     current_page = input_url
 
-    max_pages = 7
+    max_pages = 5
     page_count = 0
 
     while page_count < max_pages:
