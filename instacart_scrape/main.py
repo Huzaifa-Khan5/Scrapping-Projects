@@ -118,7 +118,7 @@ def get_all_pages(driver, wait, input_url, filename):
 
     current_page = input_url
 
-    max_pages = 5
+    max_pages = 51
     page_count = 0
 
     while page_count < max_pages:
