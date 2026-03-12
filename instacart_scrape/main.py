@@ -46,12 +46,12 @@ def scrape_products(driver, wait, products_links, filename):
             ).text
 
             # -------- PRICE --------
-            price = ""
+            price = None
 
             for locator in [
+                (By.CSS_SELECTOR, "div.e-7jsaf9 span"),
                 (By.ID, "sale_price"),
-                (By.ID, "regular_price"),
-                (By.CSS_SELECTOR, "div.e-175s8ne")
+                (By.ID, "regular_price")
             ]:
                 try:
                     price = wait.until(
@@ -118,7 +118,7 @@ def get_all_pages(driver, wait, input_url, filename):
 
     current_page = input_url
 
-    max_pages = 10
+    max_pages = 7
     page_count = 0
 
     while page_count < max_pages:
