@@ -9,13 +9,13 @@ import os
 # ----------------------------
 # Load failed links
 # ----------------------------
-def load_failed_links():
+def load_failed_links(failed_url_file_name):
 
-    if not os.path.exists("failed_links.txt"):
-        print("failed_links.txt not found")
+    if not os.path.exists(f"{failed_url_file_name}"):
+        print(f"{failed_url_file_name} not found")
         return []
 
-    with open("failed_links.txt", "r") as f:
+    with open(f"{failed_url_file_name}", "r") as f:
         links = [line.strip() for line in f if line.strip()]
 
     return links
@@ -97,10 +97,11 @@ def scrape_product(driver, wait, link):
 def retry_failed_links():
 
     category_name = input("Enter category name (same CSV name): ")
-
+    failed_url_file=input("Enter failed url file name (same .txt name): ")
+    failed_url_file_name=f'{failed_url_file}.txt'
     filename = f"{category_name}.csv"
 
-    links = load_failed_links()
+    links = load_failed_links(failed_url_file_name)
 
     if not links:
         print("No failed links to retry")
@@ -132,7 +133,7 @@ def retry_failed_links():
     driver.quit()
 
     # Rewrite failed links file with remaining failures
-    with open("failed_links.txt","w") as f:
+    with open(f"{failed_url_file_name}","w") as f:
 
         for link in still_failed:
             f.write(link+"\n")
